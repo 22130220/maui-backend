@@ -1,19 +1,10 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-
-import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.time.LocalDate;
-
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.rest.core.config.Projection;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -39,6 +30,11 @@ public class Product {
     @ColumnDefault("'LV-BLV'")
     @JoinColumn(name = "categoryID")
     private Category categoryID;
+
+    @OneToMany(mappedBy = "productID", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Subimage> subimages;
+
 
     @Column(name = "quanlityStock", nullable = false)
     private Integer quanlityStock;
@@ -157,5 +153,13 @@ public class Product {
                 ", createAt=" + createAt +
                 ", minStockLevel=" + minStockLevel +
                 '}';
+    }
+
+    public List<Subimage> getSubimages() {
+        return subimages;
+    }
+
+    public void setSubimages(List<Subimage> subimages) {
+        this.subimages = subimages;
     }
 }
