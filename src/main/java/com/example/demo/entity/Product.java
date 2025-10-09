@@ -13,6 +13,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
@@ -31,7 +32,7 @@ public class Product {
     private Integer discountDefault;
 
     @Lob
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "LONGTEXT")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,8 +50,8 @@ public class Product {
     @Column(name = "thumbnail", nullable = false)
     private String thumbnail;
 
-    @Column(name = "createAt", nullable = false)
-    private LocalDate createAt;
+    @Column(name = "createAt", nullable = false, columnDefinition = "DATE")
+    private LocalDateTime createAt;
 
     @ColumnDefault("50")
     @Column(name = "minStockLevel")
@@ -63,15 +64,12 @@ public class Product {
     public void setProductID(String productID) {
         this.productID = productID;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public Integer getPrice() {
         return price;
     }
@@ -128,11 +126,11 @@ public class Product {
         this.thumbnail = thumbnail;
     }
 
-    public LocalDate getCreateAt() {
+    public LocalDateTime getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDate createAt) {
+    public void setCreateAt(LocalDateTime createAt) {
         this.createAt = createAt;
     }
 

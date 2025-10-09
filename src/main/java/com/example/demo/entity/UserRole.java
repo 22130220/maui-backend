@@ -21,4 +21,36 @@ public class UserRole {
     @JoinColumn(name = "roleID", nullable = false)
     private Role roleID;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public User getUserID() {
+        return userID;
+    }
+
+    public void setUserID(User userID) {
+        this.userID = userID;
+    }
+
+    public Role getRoleID() {
+        return roleID;
+    }
+
+    public void setRoleID(Role roleID) {
+        this.roleID = roleID;
+    }
+
+    @Override
+    public String toString() {
+        return "UserRole{" +
+                "id=" + id +
+                ", userID=" + userID +
+                ", roleID=" + roleID +
+                '}';
+    }
 }
