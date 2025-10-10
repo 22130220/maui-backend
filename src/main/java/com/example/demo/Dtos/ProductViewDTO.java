@@ -6,5 +6,7 @@ public record ProductViewDTO(
         Integer price,
         Integer discountDefault,
         String thumbnail,
-        String categoryID
+        String categoryID,
+        Integer quantityStock,
+        Integer quantitySell
 ) {}
