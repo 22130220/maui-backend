@@ -51,6 +51,21 @@ public class ProductService {
         ));
     }
 
+    public List<ProductViewDTO> searchProducts(String keyword, Integer size) {
+        Pageable topSize;
+        topSize = size != null ?  PageRequest.of(0, size) : Pageable.unpaged();
+        return productRepository.searchProducts(keyword, topSize).stream().map(p -> new ProductViewDTO(
+                p.getProductID(),
+                p.getName(),
+                p.getPrice(),
+                p.getDiscountDefault(),
+                p.getThumbnail(),
+                p.getCategoryID().getName(),
+                p.getQuanlityStock(),
+                p.getQuanlitySell()
+        )).toList();
+    }
+
     public List<ProductViewDTO> findAll() {
         var product = productRepository.findAll();
         return product.stream().map(p -> new ProductViewDTO(

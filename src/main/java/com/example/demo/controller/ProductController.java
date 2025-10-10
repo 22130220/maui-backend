@@ -44,5 +44,10 @@ public class ProductController {
         return new ResponseEntity<>(new ResponseApi<>(ResponseStatus.SUCCESS, productService.getDetail(id)), HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<ResponseApi<List<ProductViewDTO>>> searchProducts(@ModelAttribute ProductGetRequest request) {
+        return new ResponseEntity<>(new ResponseApi<>(ResponseStatus.SUCCESS, productService.searchProducts(request.getKeyword(), request.getSize())), HttpStatus.OK);
+    }
+
 
 }

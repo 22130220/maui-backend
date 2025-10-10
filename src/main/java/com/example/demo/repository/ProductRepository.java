@@ -1,14 +1,12 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Product;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,4 +23,18 @@ public interface ProductRepository extends JpaRepository<Product, String> {
             ORDER BY p.quanlitySell DESC
             """)
     List<Product> findNextProductsByQuantitySellNext(@Param("quantitySell") Integer quantitySell, Pageable pageable);
+
+    @Query("""
+            SELECT p FROM Product p
+            WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+            ORDER BY
+                CASE
+                    WHEN LOWER(p.name) LIKE LOWER(CONCAT(:keyword, '%')) THEN 1
+                    WHEN LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) THEN 2
+                    ELSE 3
+                END,
+                LENGTH(p.name) ASC,
+                p.createAt DESC
+            """)
+    List<Product> searchProducts(@Param("keyword") String keyword, Pageable pageable);
 }
