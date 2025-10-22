@@ -39,7 +39,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/detail/{id:.+}")
     public ResponseEntity<ResponseApi<ProductDetailViewDTO>> getDetail(@PathVariable("id") String id) {
         return new ResponseEntity<>(new ResponseApi<>(ResponseStatus.SUCCESS, productService.getDetail(id)), HttpStatus.OK);
     }

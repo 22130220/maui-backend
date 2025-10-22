@@ -11,6 +11,7 @@ public record ProductDetailViewDTO(
         String productID,
         String name,
         Integer price,
+        String description,
         Integer discountDefault,
         String thumbnail,
         Category categoryID,

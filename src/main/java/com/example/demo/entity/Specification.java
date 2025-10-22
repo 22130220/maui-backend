@@ -10,16 +10,15 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "specifications")
 public class Specification {
+
     @Id
     @Column(name = "specificationID", nullable = false, length = 100)
     private String specificationID;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "specificationID", nullable = false)
-    private Product products;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productID", referencedColumnName = "productID")
+    private Product product;
 
-    @ColumnDefault("'Dài 192cm x Rộng 132cm x Cao 72cm'")
     @Column(name = "dimensions")
     private String dimensions;
 
@@ -32,7 +31,5 @@ public class Specification {
     @Column(name = "standard")
     private String standard;
 
-    @Column(name = "productID", length = 100)
-    private String productID;
-
+    // getter/setter...
 }
