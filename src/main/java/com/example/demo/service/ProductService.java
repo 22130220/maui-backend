@@ -81,12 +81,16 @@ public class ProductService {
     }
 
     public ProductDetailViewDTO getDetail(String productID) {
-        var product = productRepository.findByIdFetchJoin(productID).orElseThrow(() -> new ResourceNotFoundException(String.format("Không tìm thấy sản phẩm %s", productID)));
-        var spec = specificationRepository.findById(productID).orElse(null);
+        var product = productRepository.findByIdFetchJoin(productID)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy sản phẩm " + productID));
+
+        var spec = product.getSpecification();
+
         return new ProductDetailViewDTO(
                 product.getProductID(),
                 product.getName(),
                 product.getPrice(),
+                product.getDescription(),
                 product.getDiscountDefault(),
                 product.getThumbnail(),
                 product.getCategoryID(),
@@ -95,7 +99,14 @@ public class ProductService {
                 product.getQuanlitySell(),
                 product.getCreateAt(),
                 product.getMinStockLevel(),
-                new SpecificationProductDetailDTO(spec.getSpecificationID(), spec.getDimensions(),  spec.getMaterial(), spec.getOriginal(), spec.getStandard(), spec.getProductID())
+                spec == null ? null : new SpecificationProductDetailDTO(
+                        spec.getSpecificationID(),
+                        spec.getDimensions(),
+                        spec.getMaterial(),
+                        spec.getOriginal(),
+                        spec.getStandard(),
+                        product.getProductID()
+                )
         );
     }
 }

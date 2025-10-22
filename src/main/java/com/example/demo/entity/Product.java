@@ -53,6 +53,13 @@ public class Product {
     @Column(name = "minStockLevel")
     private Integer minStockLevel;
 
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Specification specification;
+
+    public Specification getSpecification() {
+        return specification;
+    };
+
     public String getProductID() {
         return productID;
     }
