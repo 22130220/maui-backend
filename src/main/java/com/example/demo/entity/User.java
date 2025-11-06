@@ -51,6 +51,28 @@ public class User {
     @Column(name = "banned")
     private Integer banned;
 
+    @Column(name = "otpCode", length = 10)
+    private String otpCode;
+
+    @Column(name = "otpExpireTime")
+    private Long otpExpireTime;
+
+    public String getOtpCode() {
+        return otpCode;
+    }
+
+    public Long getOtpExpireTime() {
+        return otpExpireTime;
+    }
+
+    public void setOtpCode(String otpCode) {
+        this.otpCode = otpCode;
+    }
+
+    public void setOtpExpireTime(Long otpExpireTime) {
+        this.otpExpireTime = otpExpireTime;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -162,6 +184,8 @@ public class User {
                 ", failPassword='" + failPassword + '\'' +
                 ", accountType=" + accountType +
                 ", banned=" + banned +
+                ", otpCode='" + otpCode + '\'' +
+                ", otpExpireTime=" + otpExpireTime +
                 '}';
     }
 }
