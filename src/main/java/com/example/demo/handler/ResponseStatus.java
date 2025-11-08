@@ -7,7 +7,8 @@ public enum ResponseStatus {
     UNAUTHORIZED(401, "Unauthorized"),
     FORBIDDEN(403, "For Bidden"),
     NOT_FOUND(404, "Not Found"),
-    INTERNAL_SERVER_ERROR(500, "Internal Server Error");
+    INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
+    METHOD_ARGUMENT_ERROR(408, "Required argument");
     final int code;
     final String message;
     ResponseStatus(int code, String message) {

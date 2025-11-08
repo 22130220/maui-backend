@@ -19,6 +19,9 @@ public class User {
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "password")
     private String password;
 
@@ -187,5 +190,13 @@ public class User {
                 ", otpCode='" + otpCode + '\'' +
                 ", otpExpireTime=" + otpExpireTime +
                 '}';
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
