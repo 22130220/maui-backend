@@ -15,22 +15,18 @@ public class ResponseApi<T> {
         this.data = data;
         this.timestamp = LocalDateTime.now();
     }
-
     public int getCode() {
         return code;
     }
-
     public String getMessage() {
         return message;
     }
-
     public T getData() {
         return data;
     }
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
-
     @Override
     public String toString() {
         return "ResponseApi{" +
