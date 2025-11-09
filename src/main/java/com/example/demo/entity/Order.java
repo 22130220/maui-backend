@@ -17,6 +17,7 @@ import java.time.LocalDate;
 public class Order {
     @Id
     @Column(name = "orderID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -31,7 +32,7 @@ public class Order {
     private String email;
 
     @Column(name = "phoneNumber", nullable = false)
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     @ColumnDefault("''")
     @Column(name = "address", nullable = false)

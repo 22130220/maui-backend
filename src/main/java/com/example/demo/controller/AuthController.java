@@ -14,7 +14,6 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
-
     @PostMapping("/forgot-password")
     public ResponseEntity<?> sendOtp(@RequestParam String email) {
         try {
@@ -38,7 +37,6 @@ public class AuthController {
             ));
         }
     }
-
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestParam String email, @RequestParam String otp) {
         boolean ok = authService.verifyOtp(email, otp);

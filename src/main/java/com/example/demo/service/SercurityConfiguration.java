@@ -20,6 +20,10 @@ public class SercurityConfiguration {
     @Autowired
     JwtFilter jwtFilter;
     @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()) // tắt CSRF cho API public
                 .cors(cors -> cors.configurationSource(request -> {
@@ -29,7 +33,6 @@ public class SercurityConfiguration {
                     config.addAllowedHeader("*");
                     return config;
                 }));
-
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         System.out.println("filter 2");
         http.authorizeHttpRequests(configurer ->
