@@ -1,7 +1,9 @@
 package com.example.demo.repository;
 
 import com.example.demo.Dtos.ProductReviewDTO;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductReview;
+import com.example.demo.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductReviewRepository extends JpaRepository<ProductReview, Integer> {
     @Query("""
@@ -52,5 +55,7 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, In
            AND p.comment IS NOT NULL AND p.comment <> ''
            """)
     List<ProductReviewDTO> findTop5Comments(@Param("productId") String productId, Pageable pageable);
+
+    Optional<ProductReview> findByUserIDAndProductID(User user, Product product);
 
 }

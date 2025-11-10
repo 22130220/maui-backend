@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -37,19 +39,17 @@ public class OrderService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    private static final Integer DEFAULT_USER_ID = 11;
     private static final Integer PROCESSING_STATUS_ID = 2;
     private static final Integer COD_PAYMENT_ID = 1;
 
     @Transactional
     public CheckoutResponse checkout(CheckoutRequest request) {
         try {
-            log.info("Starting checkout process for user: {}", DEFAULT_USER_ID);
-
-            // 1. Lấy user
-            User user = userRepository.findById(Long.valueOf(DEFAULT_USER_ID))
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+            System.out.println(u.getUsername());
+            User user  =  userRepository.findByEmail(u.getUsername())
                     .orElseThrow(() -> {
-                        log.error("User not found with ID: {}", DEFAULT_USER_ID);
                         return new ResourceNotFoundException("Người dùng không tồn tại");
                     });
 

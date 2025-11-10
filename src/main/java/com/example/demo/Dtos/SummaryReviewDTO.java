@@ -7,5 +7,6 @@ public record SummaryReviewDTO(
         double avgRating,
         long totalComments,
         Map<Integer, Integer> starCount,
-        List<ProductReviewDTO> topFiveComment
+        List<ProductReviewDTO> topFiveComment,
+        boolean hasComment
 ) { }
