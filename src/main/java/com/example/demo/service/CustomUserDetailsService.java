@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,18 +24,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     UserRoleRepository userRoleRepository;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         com.example.demo.entity.User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        System.out.println("user: "+user);
+//        System.out.println("user: "+user);
         List<UserRole> roles = userRoleRepository.findByUserID(user);
 
-        System.out.println(roles);
+//        System.out.println(roles);
 
         List<SimpleGrantedAuthority> authorities = roles.stream()
                 .map(ur -> new SimpleGrantedAuthority("ROLE_" + ur.getRoleID().getRoleName()))
                 .toList();
-        System.out.println("authorities: " + authorities);
+//        System.out.println("authorities: " + authorities);
         // Trả về UserDetails "chuẩn" của Spring Security
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
