@@ -3,21 +3,34 @@ package com.example.demo.service;
 import com.example.demo.Dtos.ProductReviewDTO;
 import com.example.demo.Dtos.SummaryReviewDTO;
 import com.example.demo.Dtos.request.ProductReviewRequest;
+import com.example.demo.Dtos.request.ReviewRequest;
+import com.example.demo.entity.Product;
+import com.example.demo.entity.ProductReview;
+import com.example.demo.entity.User;
+import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.ProductReviewRepository;
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.time.Instant;
+import java.util.*;
 
 @Service
 public class ProductReviewService {
     @Autowired
     private ProductReviewRepository productReviewRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public Page<ProductReviewDTO> findAll(ProductReviewRequest productReviewRequest) {
         Pageable pageable = productReviewRequest.toPageable();
@@ -54,7 +67,66 @@ public class ProductReviewService {
             starCount.putIfAbsent(i, 0);
         }
 
+        boolean hasComment = false;
 
-        return new SummaryReviewDTO(avgRating, totalComments, starCount,comments);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.isAuthenticated() && authentication.getPrincipal() != null && !"anonymousUser".equals(authentication.getPrincipal())) {
+
+            org.springframework.security.core.userdetails.User u =
+                    (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+
+            User user = userRepository.findByEmail(u.getUsername())
+                    .orElseThrow(() -> new ResourceNotFoundException("Người dùng không tồn tại"));
+
+            Product product = productRepository.findById(productReviewRequest.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Sản phẩm không tồn tại"));
+
+            Optional<ProductReview> existingReview = productReviewRepository.findByUserIDAndProductID(user, product);
+            if (existingReview.isPresent()) {
+                hasComment = true;
+            }
+        }
+
+        return new SummaryReviewDTO(avgRating, totalComments, starCount,comments, hasComment);
+    }
+
+    public boolean postComment(ReviewRequest reviewRequest) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+
+            User user  =  userRepository.findByEmail(u.getUsername())
+                    .orElseThrow(() -> {
+                        return new ResourceNotFoundException("Người dùng không tồn tại");
+                    });
+
+            Product product = productRepository.findById(reviewRequest.getProductId())
+                    .orElseThrow(() -> {
+                        return new ResourceNotFoundException("Người dùng không tồn tại");
+                    });
+
+            Optional<ProductReview> existingReview = productReviewRepository.findByUserIDAndProductID(user, product);
+            if (existingReview.isPresent()) {
+                return false;
+            }
+
+            ProductReview review = new ProductReview();
+            review.setProductID(product);
+            review.setUserID(user);
+            review.setRating(reviewRequest.getRating());
+            review.setComment(reviewRequest.getComment());
+            review.setCreatedAt(Instant.now());
+
+
+            review.setHidden(0);
+            review.setPhoneNumber(0);
+            review.setFullname(user.getFullName());
+
+            productReviewRepository.save(review);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

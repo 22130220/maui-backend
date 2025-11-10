@@ -46,8 +46,6 @@ public class OrderService {
     public CheckoutResponse checkout(CheckoutRequest request) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-
             org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
             System.out.println(u.getUsername());
             User user  =  userRepository.findByEmail(u.getUsername())
